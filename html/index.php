@@ -2,13 +2,19 @@
 
 function adminer_object() {
 
+    $uploadDir = '/uploads/';
+    if (!is_dir(__DIR__ . $uploadDir)) {
+        mkdir(__DIR__ . $uploadDir);
+    }
+
     foreach (glob(__DIR__ . '/../plugins/*.php') as $filename) {
         include_once $filename;
     }
 
     $plugins = [
         new AdminerLoginTable(getenv("ADMINER_EDITOR_DB")),
-        new AdminerTinymce("tinymce/tinymce.min.js")
+        new AdminerTinymce("tinymce/tinymce.min.js"),
+        new AdminerFileUpload(__DIR__ . $uploadDir, $uploadDir)
     ];
 
     class AdminerCustom extends AdminerPlugin {
